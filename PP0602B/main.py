@@ -1,4 +1,3 @@
-import math
 import sys
 
 try:
@@ -9,56 +8,31 @@ try:
                 l = int(lk.split(' ')[0])
                 k = int(lk.split(' ')[1])
 
-                if l < 3 or l > 101:
-                    break
+                if l < 3 or k > 100:
+                    sys.exit(0)
 
-                lines = ''
-                numerator = 1
-                for i in range(int(l)):
-                    for j in range(int(k)):
-                        if numerator == 10:
-                            lines += '0 '
-                            numerator = 1
-                        else:
-                            lines += str(numerator) + ' '
-                            numerator += 1
+                lines = []
+                for _ in range(int(l)):
+                    lines.append(input().split(' '))
 
-                linesArr = [lines[i:i + (k * 2) - 1] for i in range(0, len(lines), (k * 2))]
+                linesArr = [' '.join(lines[i]) for i in range(0, len(lines))]
 
-                linesCenters = [linesArr[i] for i in range(1, len(linesArr) - 1)]
+                frameRotated = []
+                for i in range(l):
+                    if i == 0:
+                        frameRotated.append(
+                            ' '.join(linesArr[0].split(' ')[1:]) + ' ' + str(linesArr[1].split(' ')[1:][-1]))
+                    elif i == l - 1:
+                        frameRotated.append(
+                            ' '.join(linesArr[i - 1].split(' ')[:1]) + ' ' + ' '.join(
+                                linesArr[i].split(' ')[:k - 1][:k - 1]))
+                    else:
+                        frameRotated.append(
+                            linesArr[i - 1].split(' ')[0] + ' ' + ' '.join(linesArr[i].split(' ')[1:-1]) + ' ' +
+                            linesArr[i + 1].split(' ')[-1])
 
-                linesFrame = str(linesArr[0])
-                fir = ''.join([str(linesCenters[i][-1]) for i in range(0, len(linesCenters))])
-                linesFrame += ' ' + fir
-
-                linesFrame += ' ' + linesArr[-1][::-1]
-
-                fir = ' '.join([str(linesCenters[i][0]) for i in range(0, len(linesCenters))][::-1])
-                linesFrame += ' ' + fir
-                linesFrame = linesFrame[2:] + ' ' + linesFrame[:2]
-                linesFrame = linesFrame.replace(' ', '')
-
-                finishLines = []
-                finishLines.append(" ".join(linesFrame[:k]))
-
-                rangeLen = int(math.ceil(len(linesFrame) / k + 1) - 2)
-
-                if l > 9:
-                    rangeLen += 1
-
-                for i in range(rangeLen):
-                    if len(finishLines) < l - 1 and \
-                            (l < 4 or (linesFrame[k + i:k + i + 1] != '' and linesFrame[
-                                                                             (2 * k + i + (k - 1)):(
-                                                                                     2 * k + i + k)] != '')):
-                        finishLines.append(
-                            linesFrame[len(linesFrame) // 2:][::-1][i] + linesArr[i + 1][1:-1] + linesFrame[
-                                                                                                 k + i:k + i + 1])
-
-                finishLines.append(" ".join(linesFrame[-(k + l - 2):-(l - 2)][::-1]))
-
-                for i in range(len(finishLines)):
-                    print(finishLines[i])
+                for i in range(len(frameRotated)):
+                    print(frameRotated[i])
 
         sys.exit(0)
 except:
